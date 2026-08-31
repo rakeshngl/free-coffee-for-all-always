@@ -1,1 +1,286 @@
 @import "tailwindcss";
+
+@theme {
+  --color-roast: #20120a;
+  --color-bean: #33200f;
+  --color-cocoa: #4a2f17;
+  --color-ink: #241509;
+  --color-latte: #f0e2cb;
+  --color-foam: #faf2e1;
+  --color-marigold: #ffb63d;
+  --color-butter: #ffd878;
+  --color-cherry: #e4572e;
+  --color-sage: #a9c47f;
+  --color-cork: #4c3118;
+  --font-display: "Bricolage Grotesque", "Instrument Sans", sans-serif;
+  --font-body: "Instrument Sans", "Helvetica Neue", sans-serif;
+  --font-mono: "Space Mono", "Courier New", monospace;
+}
+
+html {
+  scroll-padding-top: 84px;
+}
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+body {
+  font-family: var(--font-body);
+  background: var(--color-roast);
+  color: var(--color-latte);
+  overflow-x: hidden;
+}
+
+::selection {
+  background: var(--color-marigold);
+  color: var(--color-ink);
+}
+
+/* ---------- texture & overlays ---------- */
+.noise-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  pointer-events: none;
+  opacity: 0.055;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+.paper-grain {
+  background-image: radial-gradient(rgba(36, 21, 9, 0.07) 1px, transparent 1.2px);
+  background-size: 22px 22px;
+}
+.cork-grain {
+  background-image:
+    radial-gradient(rgba(255, 216, 120, 0.09) 1.5px, transparent 1.8px),
+    radial-gradient(rgba(32, 18, 10, 0.5) 1px, transparent 1.4px);
+  background-size: 34px 34px, 21px 21px;
+  background-position: 0 0, 11px 7px;
+}
+
+/* ---------- marquee ---------- */
+.marquee {
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(90deg, transparent, black 6%, black 94%, transparent);
+  mask-image: linear-gradient(90deg, transparent, black 6%, black 94%, transparent);
+}
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: marquee-x var(--speed, 30s) linear infinite;
+}
+.marquee-track.reverse {
+  animation-direction: reverse;
+}
+.marquee:hover .marquee-track {
+  animation-play-state: paused;
+}
+@keyframes marquee-x {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+/* ---------- ken burns breathing ---------- */
+.kenburns {
+  animation: kenburns 22s ease-in-out infinite alternate;
+}
+@keyframes kenburns {
+  from {
+    transform: scale(1) translate(0, 0);
+  }
+  to {
+    transform: scale(1.12) translate(-2%, -2.5%);
+  }
+}
+
+/* ---------- rotating stamp ---------- */
+.spin-slow {
+  animation: spin 16s linear infinite;
+}
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ---------- steam ---------- */
+.steam path {
+  animation: steam-rise 3.2s ease-in-out infinite;
+  transform-origin: center bottom;
+}
+.steam path:nth-child(2) {
+  animation-delay: 0.9s;
+}
+.steam path:nth-child(3) {
+  animation-delay: 1.7s;
+}
+@keyframes steam-rise {
+  0% {
+    opacity: 0;
+    transform: translateY(6px) scaleY(0.7);
+  }
+  35% {
+    opacity: 0.9;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-10px) scaleY(1.15);
+  }
+}
+
+/* ---------- pulse dot ---------- */
+.pulse-dot::after {
+  content: "";
+  position: absolute;
+  inset: -4px;
+  border-radius: 9999px;
+  border: 2px solid currentColor;
+  animation: ping-soft 1.8s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+@keyframes ping-soft {
+  75%,
+  100% {
+    transform: scale(2.1);
+    opacity: 0;
+  }
+}
+
+/* ---------- reveal on scroll ---------- */
+.reveal {
+  opacity: 0;
+  transform: translateY(26px);
+  transition:
+    opacity 0.75s ease,
+    transform 0.75s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+.reveal.on {
+  opacity: 1;
+  transform: none;
+}
+
+/* ---------- letterboard flip ---------- */
+.letterflip {
+  animation: letterflip 0.45s cubic-bezier(0.2, 0.8, 0.3, 1);
+}
+@keyframes letterflip {
+  0% {
+    transform: rotateX(88deg);
+    opacity: 0;
+  }
+  100% {
+    transform: rotateX(0deg);
+    opacity: 1;
+  }
+}
+
+/* ---------- punch hole ---------- */
+.punch-in {
+  animation: punch-in 0.4s cubic-bezier(0.2, 1.4, 0.4, 1);
+  transform-origin: center;
+}
+@keyframes punch-in {
+  0% {
+    transform: scale(2.2);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+.card-shake {
+  animation: card-shake 0.4s ease;
+}
+@keyframes card-shake {
+  0%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(-1.4deg) translateY(2px); }
+  60% { transform: rotate(1.1deg) translateY(1px); }
+}
+
+/* ---------- fresh pin flash ---------- */
+.pin-flash {
+  animation: pin-flash 1.8s ease-out;
+}
+@keyframes pin-flash {
+  0%,
+  55% {
+    box-shadow: 0 0 0 4px var(--color-marigold), 0 18px 40px rgba(32, 18, 10, 0.4);
+  }
+  100% {
+    box-shadow: 0 0 0 0 transparent, 0 10px 24px rgba(32, 18, 10, 0.25);
+  }
+}
+
+/* ---------- stamp press ---------- */
+.stamp-press {
+  animation: stamp-press 0.5s cubic-bezier(0.2, 1.6, 0.35, 1);
+}
+@keyframes stamp-press {
+  0% {
+    transform: scale(2.4) rotate(-14deg);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1) rotate(-8deg);
+    opacity: 1;
+  }
+}
+
+/* ---------- underline link ---------- */
+.link-sweep {
+  background-image: linear-gradient(currentColor, currentColor);
+  background-size: 0% 2px;
+  background-repeat: no-repeat;
+  background-position: 0 100%;
+  transition: background-size 0.35s ease;
+}
+.link-sweep:hover {
+  background-size: 100% 2px;
+}
+
+/* ---------- event row ---------- */
+.event-row {
+  transition: transform 0.35s cubic-bezier(0.2, 0.7, 0.2, 1), background-color 0.35s ease;
+}
+.event-row:hover {
+  transform: translateX(10px);
+}
+
+/* ---------- outline display text ---------- */
+.text-outline {
+  -webkit-text-stroke: 2px var(--color-latte);
+  color: transparent;
+}
+.text-outline-dark {
+  -webkit-text-stroke: 2px rgba(36, 21, 9, 0.55);
+  color: transparent;
+}
+
+/* ---------- reduced motion ---------- */
+@media (prefers-reduced-motion: reduce) {
+  .marquee-track,
+  .kenburns,
+  .spin-slow,
+  .steam path,
+  .pulse-dot::after,
+  .letterflip,
+  .punch-in,
+  .card-shake,
+  .pin-flash,
+  .stamp-press {
+    animation: none !important;
+  }
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+  .event-row,
+  .link-sweep {
+    transition: none;
+  }
+}
